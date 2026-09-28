@@ -35,22 +35,31 @@ def build_wiring():
     except Exception:
         _REG = None
 
-    async def dispatch_tool(step):
-        tool, _, arg = (step.partition(":") if isinstance(step, str) else ("", "", ""))
-        tool, arg = tool.strip(), arg.strip()
-        if _REG:
-            try:
-                if tool in _REG:
-                    fn = _REG[tool]
-                    r = fn(arg) if not inspect.iscoroutinefunction(fn) else await fn(arg)
-                    return str(r)
-            except Exception as e:
-                raise RuntimeError(str(e)) from e
-        if isinstance(step, str) and step.strip():
-            if _REG is None:
-                return f"[no-tools] {step}"
-            raise RuntimeError(f"unknown tool '{tool}'")
-        raise RuntimeError("empty step")
+    async def confirm(prompt: str) -> bool:
+        try:
+            ans = input(f"{prompt} [y/N]: ").strip().lower()
+        except EOFError:
+            return False
+        return ans in ("y", "yes")
+
+    async def dispatch_tool(name: str, args: dict | None = None):
+        if _REG is None:
+            raise RuntimeError("tools unavailable (tools package missing)")
+        try:
+            from tools import dispatch as _real_dispatch  # type: ignore
+        except Exception as e:
+            raise RuntimeError(f"tools unavailable: {e}") from e
+        cfg = load_config()
+
+        async def _confirm(p: str) -> bool:
+            return await confirm(p)
+
+        try:
+            return await _real_dispatch(
+                name, args or {}, {"config": cfg, "confirm": _confirm}
+            )
+        except Exception as e:
+            raise RuntimeError(str(e)) from e
 
     try:
         from memory import database as _db  # type: ignore
@@ -77,11 +86,15 @@ def main() -> None:
 
     if args.shot is not None:
         try:
-            from vision import screen as _vscreen  # type: ignore
+            from vision.ask import ask_about_screen as _vask  # type: ignore
         except Exception as e:
             print(f"vision unavailable: {e}")
             raise SystemExit(2)
-        print(asyncio.run(_vscreen.ask(args.shot)))
+        try:
+            print(asyncio.run(_vask(args.shot, load_config())))
+        except RuntimeError as e:
+            print(f"vision failed: {e}")
+            raise SystemExit(1)
         return
 
     if args.voice:
