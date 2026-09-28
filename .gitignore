@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+memory/*.db
+*.wav
+.env
+
+# local runtime
+memory/*.db
+*.wav

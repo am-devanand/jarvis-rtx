@@ -1,0 +1,3 @@
+faster-whisper # STT engine; without it transcribe() falls back to whisper.cpp CLI or raises
+piper-tts # neural TTS voices; without it speak() raises with install + voice-download hint
+sounddevice # mic capture backend; without it record() raises (also needs portaudio system lib)

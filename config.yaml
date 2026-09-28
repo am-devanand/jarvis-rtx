@@ -1,0 +1,19 @@
+models:
+  chat: "qwen3:4b"
+  vision: "qwen3-vl:4b"
+  embed: "nomic-embed-text"
+ollama_url: "http://localhost:11434"
+stt:
+  model: "base.en"
+  device: "auto"
+  binary: ""
+  model_path: ""
+tts:
+  voice: "en_US-lessac-medium"
+  model_path: ""
+tools:
+  allow_terminal: ["ls", "cat", "git", "python3", "npm", "systemctl", "ps"]
+  fs_roots: ["~/Projects"]
+  allowed_apps: ["code", "firefox", "thunar"]
+memory:
+  db: "memory/jarvis.db"

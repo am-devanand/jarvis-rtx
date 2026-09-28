@@ -1,0 +1,2 @@
+playwright
+# NOTE: after install run once: playwright install chromium
