@@ -91,7 +91,7 @@ def main() -> None:
             print(f"vision unavailable: {e}")
             raise SystemExit(2)
         try:
-            print(asyncio.run(_vask(args.shot, load_config())))
+            print(_vask(args.shot, load_config()))
         except RuntimeError as e:
             print(f"vision failed: {e}")
             raise SystemExit(1)

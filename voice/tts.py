@@ -39,7 +39,11 @@ def speak(text: str, cfg: Dict[str, Any]) -> str:
         )
 
     voice = PiperVoice.load(str(model_path))
+    sample_rate = int(getattr(getattr(voice, "config", None), "sample_rate", 22050))
     with wave.open(OUT_PATH, "wb") as wf:
+        wf.setnchannels(1)
+        wf.setsampwidth(2)
+        wf.setframerate(sample_rate)
         voice.synthesize(text, wf)
     _play(OUT_PATH)
     return OUT_PATH
