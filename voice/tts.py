@@ -44,17 +44,17 @@ def speak(text: str, cfg: Dict[str, Any]) -> str:
         wf.setnchannels(1)
         wf.setsampwidth(2)
         wf.setframerate(sample_rate)
-        # piper>=1.8: synthesize() returns a lazy generator of chunks;
-        # older versions write into wf directly and return None.
-        result = voice.synthesize(text, wf)
-        if result is not None:
-            try:
-                chunks = iter(result)
-            except TypeError:
-                chunks = iter(())
-            for chunk in chunks:
-                data = getattr(chunk, "audio_int16_bytes", b"") or b""
-                if data:
-                    wf.writeframes(data)
+        # piper>=1.8: synthesize(text) returns a lazy generator of chunks
+        # (no wav parameter exists); older versions write into a passed
+        # wav file and return None. Support both shapes.
+        try:
+            chunks = voice.synthesize(text)
+        except TypeError:
+            voice.synthesize(text, wf)
+            chunks = iter(())
+        for chunk in chunks:
+            data = getattr(chunk, "audio_int16_bytes", b"") or b""
+            if data:
+                wf.writeframes(data)
     _play(OUT_PATH)
     return OUT_PATH
