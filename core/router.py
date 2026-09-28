@@ -10,7 +10,7 @@ TOOL_NAMES = [
 ]
 
 _CHAT_DEFAULT = "qwen3:4b"
-_VISION_DEFAULT = "qwen3-vl:4b"
+_VISION_DEFAULT = "qwen3-vl:2b"
 
 
 def _resolve_models() -> tuple[str, str]:

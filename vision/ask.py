@@ -24,7 +24,7 @@ def ask_about_screen(
     b64 = base64.b64encode(png).decode("ascii")
 
     vision_cfg = (cfg.get("vision") if isinstance(cfg, dict) else {}) or {}
-    resolved = model or vision_cfg.get("model", "qwen3-vl:4b")
+    resolved = model or vision_cfg.get("model", "qwen3-vl:2b")
     options = None
     if isinstance(cfg, dict):
         options = ((cfg.get("models") or {}).get("options")
@@ -35,7 +35,7 @@ def ask_about_screen(
     except ImportError as e:
         raise RuntimeError(
             "vision needs models.qwen.chat (sibling module) + Ollama at"
-            " http://localhost:11434 with qwen3-vl:4b"
+            " http://localhost:11434 with qwen3-vl:2b"
         ) from e
 
     messages = [{"role": "user", "content": question + CHART_SUFFIX}]

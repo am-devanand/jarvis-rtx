@@ -16,10 +16,11 @@ pip install -r requirements.txt
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ollama pull qwen3:4b
-ollama pull qwen3-vl:4b
+ollama pull qwen3-vl:2b
 ollama pull nomic-embed-text
 # Optional (needs more VRAM, router still loads ONE model at a time):
 # ollama pull qwen3:8b
+# ollama pull qwen3-vl:4b  # sharper eyes for detailed chart reads
 ```
 
 ### 2. Voice (STT/TTS) — owned by voice sibling agent
