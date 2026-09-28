@@ -2,6 +2,7 @@ models:
   chat: "qwen3:4b"
   vision: "qwen3-vl:4b"
   embed: "nomic-embed-text"
+  # options: {num_ctx: 2048}  # uncomment to shrink KV cache on 4GB VRAM
 ollama_url: "http://localhost:11434"
 stt:
   model: "base.en"

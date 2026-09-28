@@ -34,6 +34,7 @@ def chat(
     images: list[str] | None = None,
     timeout: int = 120,
     keep_alive: str = "30m",
+    options: dict | None = None,
 ) -> str:
     default_model, base_url = _config_defaults()
     model = model or default_model
@@ -43,10 +44,18 @@ def chat(
             if m.get("role") == "user":
                 m["images"] = list(images)
                 break
+    payload: dict = {
+        "model": model,
+        "messages": payload_messages,
+        "stream": False,
+        "keep_alive": keep_alive,
+    }
+    if options:
+        payload["options"] = dict(options)
     try:
         resp = requests.post(
             f"{base_url.rstrip('/')}/api/chat",
-            json={"model": model, "messages": payload_messages, "stream": False, "keep_alive": keep_alive},
+            json=payload,
             timeout=timeout,
         )
     except Exception as e:

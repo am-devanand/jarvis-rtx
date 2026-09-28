@@ -25,6 +25,10 @@ def ask_about_screen(
 
     vision_cfg = (cfg.get("vision") if isinstance(cfg, dict) else {}) or {}
     resolved = model or vision_cfg.get("model", "qwen3-vl:4b")
+    options = None
+    if isinstance(cfg, dict):
+        options = ((cfg.get("models") or {}).get("options")
+                   or vision_cfg.get("options")) or None
 
     try:
         from models.qwen import chat
@@ -35,4 +39,5 @@ def ask_about_screen(
         ) from e
 
     messages = [{"role": "user", "content": question + CHART_SUFFIX}]
-    return str(chat(messages, model=resolved, images=[b64], timeout=timeout))
+    return str(chat(messages, model=resolved, images=[b64], timeout=timeout,
+                   options=options))
