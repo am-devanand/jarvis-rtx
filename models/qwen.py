@@ -33,6 +33,7 @@ def chat(
     model: str | None = None,
     images: list[str] | None = None,
     timeout: int = 120,
+    keep_alive: str = "30m",
 ) -> str:
     default_model, base_url = _config_defaults()
     model = model or default_model
@@ -45,7 +46,7 @@ def chat(
     try:
         resp = requests.post(
             f"{base_url.rstrip('/')}/api/chat",
-            json={"model": model, "messages": payload_messages, "stream": False},
+            json={"model": model, "messages": payload_messages, "stream": False, "keep_alive": keep_alive},
             timeout=timeout,
         )
     except Exception as e:

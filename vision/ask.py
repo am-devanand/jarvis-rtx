@@ -11,7 +11,8 @@ CHART_SUFFIX = (
 
 
 def ask_about_screen(
-    question: str, cfg: Dict[str, Any], region: bool = False, model: Optional[str] = None
+    question: str, cfg: Dict[str, Any], region: bool = False, model: Optional[str] = None,
+    timeout: int = 600,
 ) -> str:
     """Grab screen, send to Qwen3-VL, return answer string."""
     try:
@@ -34,4 +35,4 @@ def ask_about_screen(
         ) from e
 
     messages = [{"role": "user", "content": question + CHART_SUFFIX}]
-    return str(chat(messages, model=resolved, images=[b64], timeout=120))
+    return str(chat(messages, model=resolved, images=[b64], timeout=timeout))
